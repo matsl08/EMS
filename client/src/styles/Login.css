@@ -1,0 +1,154 @@
+/* Root Variables */
+:root {
+  --primary: #001d3d;
+  --secondary: #00b4d8;
+  --accent: #ffb703;
+  --background: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #f8f9fa;
+  --shadow: #001d3d1a;
+  --font: Avenir;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-secondary);
+  font-family: var(--font);
+}
+
+.login-form-container {
+  background: var(--primary);
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-form-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.login-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.login-group label {
+  font-weight: 600;
+  text-align: left;
+}
+
+.login-group select {
+  text-align: center;
+}
+
+.login-group input,
+.login-group select {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: var(--font);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.login-group input:focus,
+.login-group select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.password-group {
+  position: relative;
+}
+
+.password-input-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.password-input-container input {
+  flex: 1;
+}
+
+.password-toggle {
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.password-toggle:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.login-button {
+  padding: 1rem;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #0052a3;
+}
+
+.login-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #fcc;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Disabled state styles */
+input:disabled,
+select:disabled,
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Add responsive design */
+@media (max-width: 480px) {
+  .login-form-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .login-form-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .login-button {
+    padding: 0.7rem;
+  }
+}

@@ -1,0 +1,243 @@
+/* ! Root Variables */
+:root {
+  --primary: #001d3d;
+  --secondary: #00b4d8;
+  --accent: #ffb703;
+  --background: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #f8f9fa;
+  --shadow: #001d3d1a;
+  --font: Avenir;
+}
+
+/* Fixed dimension styles for user forms */
+.user-form-page {
+  font-family: var(--font);
+  height: calc(100vh - 60px);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.add-user-header h2 {
+  font-family: var(--font);
+  font-size: 3rem;
+}
+
+/* Header - Fixed height */
+.add-user-header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  color: var(--text-primary);
+  background-color: #f5f6fa;
+  z-index: 10;
+  padding-bottom: 20px;
+}
+
+.back-button {
+  height: 42px;
+  padding: 0 20px;
+  background-color: var(--accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.back-button:hover {
+  color: var(--text-secondary);
+  background-color: #555;
+}
+
+/* Form Container - Fixed dimensions */
+.user-form {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Two Column Layout - Fixed dimensions */
+.user-form.two-column {
+  display: grid;
+  gap: 30px;
+}
+
+@media (min-width: 1366px) {
+  .user-form.two-column {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.user-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Form Sections - Fixed dimensions */
+.user-form-section {
+  min-height: 200px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.user-form-section-title {
+  height: 48px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e9ecef;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+}
+
+/* Form Row - Fixed height */
+.user-form-row {
+  min-height: 78px;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .user-form-row {
+    flex-direction: column;
+  }
+}
+
+/* Form Groups - Fixed dimensions */
+.user-form-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.user-form-group label {
+  display: block;
+  height: 20px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.user-form-group input,
+.user-form-group select,
+.user-form-group textarea {
+  width: 80%;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: var(--font);
+  transition: all 0.3s ease;
+}
+
+.user-form-group textarea {
+  height: 100px;
+  padding: 12px 16px;
+  resize: vertical;
+}
+
+.user-form-group input:focus,
+.user-form-group select:focus,
+.user-form-group textarea:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+/* Button Container - Fixed dimensions */
+.user-form-buttons {
+  height: 60px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 30px;
+  padding: 0 20px;
+}
+
+@media (min-width: 1366px) {
+  .user-form-buttons {
+    grid-column: span 2;
+  }
+}
+
+/* Button Styles - Fixed dimensions */
+.button {
+  height: 42px;
+  padding: 0 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-button {
+  background: #3498db;
+  color: white;
+  border: none;
+}
+
+.submit-button:hover {
+  background: #2980b9;
+}
+
+.cancel-button {
+  background: transparent;
+  border: 1px solid #3498db;
+  color: #3498db;
+}
+
+.cancel-button:hover {
+  background: #f8fafc;
+}
+
+/* Error States - Fixed dimensions */
+.error-message {
+  min-height: 40px;
+  padding: 8px 16px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Success States - Fixed dimensions */
+.success-message {
+  min-height: 40px;
+  padding: 8px 16px;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}

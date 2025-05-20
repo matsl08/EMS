@@ -1,0 +1,120 @@
+/* ! Root Variables */
+:root {
+  --primary: #001d3d;
+  --secondary: #00b4d8;
+  --accent: #ffb703;
+  --background: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #f8f9fa;
+  --shadow: #001d3d1a;
+  --font: Avenir;
+}
+
+/* * Fixed Dashboard Layout */
+.admin-dashboard {
+  display: flex;
+  height: 90vh;
+  width: 100%;
+}
+
+/* * Sidebar - Fixed width */
+.sidebar {
+  width: 250px;
+  min-width: 250px;
+  height: 100vh;
+  background-color: var(--primary);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  padding: 20px;
+}
+
+.admin-nav-container {
+  gap: 20px;
+}
+
+/* * Navigation buttons */
+.admin-nav-button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+}
+
+.admin-nav-button:hover {
+  background-color: #34495e;
+}
+
+.admin-nav-button.active {
+  background-color: #3498db;
+}
+
+/* * Logout button - Fixed at bottom */
+.logout {
+  margin-top: auto;
+  background-color: #e74c3c !important;
+}
+
+.logout:hover {
+  background-color: #c0392b !important;
+}
+
+/* * Main content - Fixed dimensions */
+.main-content {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f8fafc;
+}
+
+.dashboard-header {
+  position: fixed;
+}
+
+/* * Modal - Fixed position and size */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form container - Fixed size */
+.form-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Screen size based grid columns */
+@media (min-width: 1920px) {
+  .courses-grid,
+  .users-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1366px) and (max-width: 1919px) {
+  .courses-grid,
+  .users-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1365px) {
+  .courses-grid,
+  .users-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,72 @@
+EndPoints:
+
+
+Authentication:
+    - POST /auth/login
+    - POST /auth/logout
+    - GET /auth/me (check authentication)
+
+
+Student:
+    Profile Management
+        - GET /students/profile
+        - PUT /students/profile/address
+        - PUT /students/profile/contact
+    Grades
+        - GET /students/grades
+    Clearance
+        - GET /students/clearance
+    Enrollment
+        - GET /students/enrollment
+        - POST /students/enrollment
+    Evaluation
+        - GET /students/evaluation
+    Current Enrolled Courses
+        - GET /students/courses
+
+
+Teacher:
+    Assigned Courses
+        - GET /teachers/courses
+    Grade Management
+        - POST /teachers/courses/:edpCode/grades
+        - POST /teachers/courses/:edpCode/grades/upload
+    Clearance Management
+        - GET /teachers/courses/:edpCode/clearance
+        - PUT /teachers/courses/:edpCode/clearance/:studentId
+
+
+MIS admin:
+    User Management
+        - POST /admin/mis/users
+        - GET /admin/mis/users
+        - GET /admin/mis/users/:id
+        - PUT /admin/mis/users/:id
+        - DELETE /admin/mis/users/:id
+    Course Offering Management
+        - POST /admin/mis/courses/offered
+        - PUT /admin/mis/courses/offered/:edpCode
+        - GET /admin/mis/courses/offered
+
+
+Registrar admin
+    Department Management
+        - GET /admin/registrar/departments
+        - POST /admin/registrar/departments
+        - PUT /admin/registrar/departments/:id
+        - DELETE /admin/registrar/departments/:id
+    Course Management
+        - GET /admin/registrar/courses
+        - POST /admin/registrar/courses
+        - PUT /admin/registrar/courses/:courseCode
+        - DELETE /admin/registrar/courses/:courseCode
+    Evaluation Management
+        - GET /admin/registrar/evaluations/:studentId
+        - PUT /admin/registrar/evaluations/:studentId
+
+
+Accounting admin
+    Payment Management
+        - GET /admin/accounting/payments
+        - GET /admin/accounting/payments/:studentId
+        - PUT /admin/accounting/payments/:studentId

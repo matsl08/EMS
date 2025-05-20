@@ -1,0 +1,8 @@
+- dapat after mag add ug user, naa na siyay payment with default values
+
+- highlight finished course in the lms
+- curriculum evaluation
+- NG for unpaid grades
+
+
+let's proceed to the teacher dashboard, i want you to add action buttons Grade, Clearance in the cards, if grade is clicked, it will fetch all of the student's grade of that course and list it all down and then the teacher will be able to set the m
