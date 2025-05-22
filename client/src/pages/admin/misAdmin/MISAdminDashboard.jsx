@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "../../../styles/AdminDashboard.css";
 import UserManagement from "./UserManagement";
-import CourseOffering from "./CourseOffering";
 import DepartmentManagement from "./DepartmentManagement";
 import CourseManagement from "./CourseManagement";
+import CourseOffering from "./CourseOffering";
 
 const MISAdminDashboard = () => {
   // * State for active tab
@@ -13,6 +13,11 @@ const MISAdminDashboard = () => {
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = "/";
+  };
+
+  // * Handle tab change
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
   // * Render active component based on tab
@@ -41,7 +46,7 @@ const MISAdminDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "users" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("users")}
+            onClick={() => handleTabChange("users")}
           >
             User Management
           </button>
@@ -49,7 +54,7 @@ const MISAdminDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "offerings" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("offerings")}
+            onClick={() => handleTabChange("offerings")}
           >
             Course Offerings
           </button>
@@ -57,7 +62,7 @@ const MISAdminDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "departments" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("departments")}
+            onClick={() => handleTabChange("departments")}
           >
             Department Management
           </button>
@@ -65,7 +70,7 @@ const MISAdminDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "courses" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("courses")}
+            onClick={() => handleTabChange("courses")}
           >
             Course Management
           </button>
@@ -76,7 +81,7 @@ const MISAdminDashboard = () => {
       </div>
 
       {/* * Main content area */}
-      <div className="main-content">{renderActiveComponent()}</div>
+      <div className="admin-main-content">{renderActiveComponent()}</div>
     </div>
   );
 };

@@ -16,7 +16,6 @@ const AddStudent = () => {
     isActive: true,
     studentId: "",
     studentInfo: {
-      studentNumber: "",
       programCode: "",
       yearEnrolled: new Date().getFullYear().toString(),
       yearLevel: 1,
@@ -39,7 +38,6 @@ const AddStudent = () => {
         ],
         contactInformation: [
           {
-            emailAddress: "",
             mobileNumber: "",
             landLineNumber: "",
           },
@@ -157,13 +155,21 @@ const AddStudent = () => {
     }
   };
 
+  // Add this function to process the parents array before submission
+  const processParentsArray = (parentsData) => {
+    // Filter out any parent entries with role "none" or empty role
+    return parentsData.filter(parent => 
+      parent.role && parent.role !== "none" && parent.role !== ""
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      // Ensure all required nested objects are properly structured
+      // Process the form data
       const processedFormData = {
         name: formData.name,
         email: formData.email,
@@ -172,7 +178,6 @@ const AddStudent = () => {
         isActive: true,
         studentId: formData.studentId,
         studentInfo: {
-          studentNumber: formData.studentInfo.studentNumber,
           programCode: formData.studentInfo.programCode,
           yearEnrolled: formData.studentInfo.yearEnrolled,
           yearLevel: Number(formData.studentInfo.yearLevel),
@@ -182,16 +187,8 @@ const AddStudent = () => {
             civilStatus: formData.studentInfo.demographicProfile.civilStatus,
             placeOfBirth: formData.studentInfo.demographicProfile.placeOfBirth,
             religion: formData.studentInfo.demographicProfile.religion,
-            parents: [
-              {
-                role: formData.studentInfo.demographicProfile.parents[0].role,
-                name: formData.studentInfo.demographicProfile.parents[0].name,
-              },
-              {
-                role: formData.studentInfo.demographicProfile.parents[1].role,
-                name: formData.studentInfo.demographicProfile.parents[1].name,
-              },
-            ],
+            // Process parents array to remove invalid entries
+            parents: processParentsArray(formData.studentInfo.demographicProfile.parents),
             address: [
               {
                 provinceAddress:
@@ -205,8 +202,7 @@ const AddStudent = () => {
             contactInformation: [
               {
                 emailAddress:
-                  formData.studentInfo.demographicProfile.contactInformation[0]
-                    .emailAddress,
+                  formData.email,
                 mobileNumber:
                   formData.studentInfo.demographicProfile.contactInformation[0]
                     .mobileNumber,
@@ -339,18 +335,6 @@ const AddStudent = () => {
               />
             </div>
             <div className="user-form-group">
-              <label htmlFor="studentInfo.studentNumber">Student Number</label>
-              <input
-                type="text"
-                id="studentInfo.studentNumber"
-                name="studentInfo.studentNumber"
-                value={formData.studentInfo.studentNumber}
-                onChange={handleChange}
-                required
-                placeholder="Enter student number"
-              />
-            </div>
-            <div className="user-form-group">
               <label htmlFor="studentInfo.programCode">Program Code</label>
               <input
                 type="text"
@@ -480,8 +464,7 @@ const AddStudent = () => {
                 value={formData.studentInfo.demographicProfile.parents[0].role}
                 onChange={handleChange}
               >
-                <option value="">Select Role</option>
-                <option value="none">None</option>
+                <option value="">Select Role (Optional)</option>
                 <option value="father">Father</option>
                 <option value="mother">Mother</option>
                 <option value="guardian">Guardian</option>
@@ -498,10 +481,7 @@ const AddStudent = () => {
                 value={formData.studentInfo.demographicProfile.parents[0].name}
                 onChange={handleChange}
                 placeholder="Enter name"
-                disabled={
-                  formData.studentInfo.demographicProfile.parents[0].role ===
-                  "none"
-                }
+                disabled={!formData.studentInfo.demographicProfile.parents[0].role}
               />
             </div>
             <div className="user-form-group">
@@ -513,13 +493,9 @@ const AddStudent = () => {
                 name="studentInfo.demographicProfile.parents[1].role"
                 value={formData.studentInfo.demographicProfile.parents[1].role}
                 onChange={handleChange}
-                disabled={
-                  formData.studentInfo.demographicProfile.parents[0].role ===
-                  "none"
-                }
+                disabled={!formData.studentInfo.demographicProfile.parents[0].role}
               >
-                <option value="">Select Role</option>
-                <option value="none">None</option>
+                <option value="">Select Role (Optional)</option>
                 <option value="father">Father</option>
                 <option value="mother">Mother</option>
                 <option value="guardian">Guardian</option>
@@ -536,10 +512,7 @@ const AddStudent = () => {
                 value={formData.studentInfo.demographicProfile.parents[1].name}
                 onChange={handleChange}
                 placeholder="Enter name"
-                disabled={
-                  formData.studentInfo.demographicProfile.parents[0].role ===
-                  "none"
-                }
+                disabled={!formData.studentInfo.demographicProfile.parents[0].role}
               />
             </div>
           </div>
@@ -550,22 +523,6 @@ const AddStudent = () => {
           <div className="user-form-section">
             <div className="user-form-section-title">Contact Information</div>
             <div className="user-form-row">
-              <div className="user-form-group">
-                <label htmlFor="studentInfo.demographicProfile.contactInformation[0].emailAddress">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="studentInfo.demographicProfile.contactInformation[0].emailAddress"
-                  name="studentInfo.demographicProfile.contactInformation[0].emailAddress"
-                  value={
-                    formData.studentInfo.demographicProfile
-                      .contactInformation[0].emailAddress
-                  }
-                  onChange={handleChange}
-                  placeholder="Enter email address"
-                />
-              </div>
               <div className="user-form-group">
                 <label htmlFor="studentInfo.demographicProfile.contactInformation[0].mobileNumber">
                   Mobile Number

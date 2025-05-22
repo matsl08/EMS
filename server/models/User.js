@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
   adminId: { type: String, unique: true, sparse: true },
 
   studentInfo: {
-    studentNumber: String,
     programCode: { type: String, ref: "Department.programs" },
     yearEnrolled: Number,
     yearLevel: Number,
@@ -36,12 +35,27 @@ const userSchema = new mongoose.Schema({
       civilStatus: String,
       placeOfBirth: String,
       religion: String,
-      parents: [
-        {
-          role: { type: String, enum: ["father", "mother", "guardian"] },
+      parents: {
+        type: [{
+          role: { 
+            type: String, 
+            enum: ["father", "mother", "guardian"],
+            required: true
+          },
           name: String,
-        },
-      ],
+        }],
+        default: [],
+        validate: {
+          validator: function(parents) {
+            // If parents array is empty or all entries have valid roles, validation passes
+            if (parents.length === 0) return true;
+            return parents.every(parent => 
+              ["father", "mother", "guardian"].includes(parent.role)
+            );
+          },
+          message: "Parents must have valid roles (father, mother, or guardian) or be empty"
+        }
+      },
       address: [
         {
           provinceAddress: String,

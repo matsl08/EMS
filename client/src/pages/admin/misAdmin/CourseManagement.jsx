@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "../../../api/axios";
+import "../../../styles/AdminDashboard.css";
 
 const CourseManagement = () => {
   const [courses, setCourses] = useState([]);

@@ -7,64 +7,116 @@ const ClearanceManagement = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // * Fetch assigned courses
+  // Fetch teacher's courses
   useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("/teachers/courses");
+        setCourses(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch courses");
+        setLoading(false);
+      }
+    };
+
     fetchCourses();
   }, []);
 
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get("/teachers/courses");
-      setCourses(response.data);
-      setError(null);
-    } catch (err) {
-      setError("Failed to fetch courses", err);
-    } finally {
-      setLoading(false);
+  // Fetch students when a course is selected
+  useEffect(() => {
+    if (selectedCourse) {
+      fetchStudentClearances(selectedCourse.edpCode);
     }
-  };
+  }, [selectedCourse]);
 
-  // * Handle course selection and fetch clearance data
-  const handleCourseSelect = async (course) => {
-    setSelectedCourse(course);
+  const fetchStudentClearances = async (edpCode) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `/teachers/courses/${course.edpCode}/clearance`
-      );
+      const response = await axios.get(`/teachers/courses/${edpCode}/clearance`);
       setStudents(response.data);
       setError(null);
     } catch (err) {
-      setError("Failed to fetch student clearance data", err);
+      setError("Failed to fetch student clearances");
       setStudents([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // * Handle clearance status update
-  const handleClearanceUpdate = async (studentId, status, remarks) => {
-    if (!selectedCourse) return;
-
-    try {
-      await axios.put(
-        `/teachers/courses/${selectedCourse.edpCode}/clearance/${studentId}`,
-        {
-          status,
-          remarks,
-        }
-      );
-
-      // Refresh clearance data
-      handleCourseSelect(selectedCourse);
-    } catch (err) {
-      setError("Failed to update clearance status", err);
-    }
+  const handleCourseSelect = (course) => {
+    setSelectedCourse(course);
+    setSuccessMessage("");
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
+  const handleStatusChange = (studentId, status) => {
+    const updatedStudents = students.map(student => {
+      if (student.studentId === studentId) {
+        return {
+          ...student,
+          clearances: student.clearances.map(clearance => {
+            if (clearance.courseCode === selectedCourse.courseCode) {
+              return {
+                ...clearance,
+                status
+              };
+            }
+            return clearance;
+          })
+        };
+      }
+      return student;
+    });
+    
+    setStudents(updatedStudents);
+  };
+
+  const handleRemarksChange = (studentId, remarks) => {
+    const updatedStudents = students.map(student => {
+      if (student.studentId === studentId) {
+        return {
+          ...student,
+          clearances: student.clearances.map(clearance => {
+            if (clearance.courseCode === selectedCourse.courseCode) {
+              return {
+                ...clearance,
+                remarks
+              };
+            }
+            return clearance;
+          })
+        };
+      }
+      return student;
+    });
+    
+    setStudents(updatedStudents);
+  };
+
+  const handleSaveClearance = async (studentId) => {
+    if (!selectedCourse) return;
+    
+    const student = students.find(s => s.studentId === studentId);
+    if (!student) return;
+    
+    const clearance = student.clearances.find(c => c.courseCode === selectedCourse.courseCode);
+    if (!clearance) return;
+    
+    try {
+      await axios.put(`/teachers/courses/${selectedCourse.edpCode}/clearance/${studentId}`, {
+        status: clearance.status,
+        remarks: clearance.remarks
+      });
+      
+      setSuccessMessage(`Clearance updated successfully for ${studentId}`);
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (err) {
+      setError(`Failed to update clearance for ${studentId}`);
+      setTimeout(() => setError(null), 3000);
+    }
+  };
 
   return (
     <div className="clearance-management">
@@ -72,19 +124,19 @@ const ClearanceManagement = () => {
         <h1>Clearance Management</h1>
       </div>
 
-      {/* Course Selection */}
+      {error && <div className="error-message">{error}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
+
       <div className="course-selection">
-        <h2>Select Course</h2>
+        <h2>Select a Course</h2>
         <div className="courses-list">
           {courses.map((course) => (
             <button
               key={course.edpCode}
-              className={`course-btn ${
-                selectedCourse?.edpCode === course.edpCode ? "active" : ""
-              }`}
+              className={`course-select-btn ${selectedCourse?.edpCode === course.edpCode ? 'active' : ''}`}
               onClick={() => handleCourseSelect(course)}
             >
-              {course.courseCode} - {course.section}
+              {course.courseCode} - {course.edpCode}
             </button>
           ))}
         </div>

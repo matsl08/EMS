@@ -7,6 +7,7 @@ import {
 import {
   getStudentEvaluation,
   updateStudentEvaluation,
+  getAllStudents,
 } from "../controllers/registrarAdminController.js";
 
 const router = Router();
@@ -16,6 +17,10 @@ const router = Router();
 
 router.use(protect);
 router.use(authorizeAdminPosition("registrar"));
+
+// ! Student Management
+// ? Get all students
+router.get("/students", getAllStudents);
 
 // ! Evaluation Management
 // ? Get and update student evaluations

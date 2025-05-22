@@ -16,6 +16,8 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import GradeManagement from "./pages/teacher/GradeManagement";
 import ClearanceManagement from "./pages/teacher/ClearanceManagement";
 import StudentDashboard from "./pages/student/StudentDashboard";
+import AddCourseOffering from "./pages/admin/misAdmin/AddCourseOffering";
+import CourseOffering from "./pages/admin/misAdmin/CourseOffering";
 import "./App.css";
 
 // * Main App component
@@ -73,6 +75,11 @@ function App() {
                 <Route path="users/edit-student/:id" element={<AddStudent />} />
                 <Route path="users/edit-teacher/:id" element={<AddTeacher />} />
                 <Route path="users/edit-admin/:id" element={<AddAdmin />} />
+                <Route path="course-offerings" element={<CourseOffering />} />
+                <Route
+                  path="course-offerings/add"
+                  element={<AddCourseOffering />}
+                />
                 <Route
                   path="*"
                   element={<Navigate to="/admin/mis" replace />}

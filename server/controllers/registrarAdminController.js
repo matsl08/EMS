@@ -2,6 +2,22 @@
 // @ file: Handles all registrar admin operations
 
 import Evaluation from "../models/Evaluation.js";
+import {} from "../models/User.js";
+
+// * Student Management Controllers
+
+// ? Get all students
+export const getAllStudents = async (req, res) => {
+  try {
+    const students = await User.find({ role: "student" })
+      .select("studentId name studentInfo")
+      .lean();
+
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // * Evaluation Management Controllers
 

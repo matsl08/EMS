@@ -1,6 +1,6 @@
 import { useState } from "react";
 import EvaluationManagement from "./EvaluationManagement";
-import "../../../styles/RegistrarDashboard.css";
+import "../../../styles/AdminDashboard.css";
 
 const RegistrarAdminDashboard = () => {
   // * State for active tab
@@ -18,7 +18,7 @@ const RegistrarAdminDashboard = () => {
       case "evaluations":
         return <EvaluationManagement />;
       default:
-        return <DepartmentManagement />;
+        return <EvaluationManagement />;
     }
   };
 
@@ -27,23 +27,23 @@ const RegistrarAdminDashboard = () => {
       {/* * Sidebar */}
       <div className="sidebar">
         <h2>Registrar Admin</h2>
-        <nav>
+        <nav className="admin-nav-container">
           <button
-            className={`nav-button ${
+            className={`admin-nav-button ${
               activeTab === "evaluations" ? "active" : ""
             }`}
             onClick={() => setActiveTab("evaluations")}
           >
             Evaluation Management
           </button>
-          <button className="nav-button logout" onClick={handleLogout}>
+          <button className="admin-nav-button logout" onClick={handleLogout}>
             Logout
           </button>
         </nav>
       </div>
 
       {/* * Main content area */}
-      <div className="main-content">{renderActiveComponent()}</div>
+      <div className="admin-main-content">{renderActiveComponent()}</div>
     </div>
   );
 };

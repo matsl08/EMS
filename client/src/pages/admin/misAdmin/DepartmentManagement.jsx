@@ -40,17 +40,21 @@ const DepartmentManagement = () => {
     e.preventDefault();
     try {
       if (selectedDepartment) {
+        // Update existing department
         await axios.put(
-          `/admin/mis/departments/${selectedDepartment.departmentId}`,
+          `/admin/mis/departments/${selectedDepartment._id}`,
           formData
         );
       } else {
+        // Create new department
         await axios.post("/admin/mis/departments", formData);
       }
       fetchDepartments();
       resetForm();
+      setShowForm(false);
     } catch (err) {
-      setError("Failed to save department", err);
+      setError(err.response?.data?.message || "Failed to save department");
+      console.error("Error saving department:", err);
     }
   };
 
@@ -83,7 +87,8 @@ const DepartmentManagement = () => {
       fetchDepartments();
       resetForm();
     } catch (err) {
-      setError("Failed to delete department", err);
+      setError(err.response?.data?.message || "Failed to delete department");
+      console.error("Error deleting department:", err);
     }
   };
 
@@ -247,7 +252,7 @@ const DepartmentManagement = () => {
           </thead>
           <tbody>
             {departments.map((dept) => (
-              <tr key={dept.departmentId}>
+              <tr key={dept._id}>
                 <td>{dept.name}</td>
                 <td>{dept.departmentCode}</td>
                 <td>{dept.departmentHead}</td>
@@ -278,7 +283,7 @@ const DepartmentManagement = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(dept.departmentId)}
+                      onClick={() => handleDelete(dept._id)}
                       className="delete-btn"
                     >
                       Delete

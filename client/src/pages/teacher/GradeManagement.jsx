@@ -7,71 +7,70 @@ const GradeManagement = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [gradeFile, setGradeFile] = useState(null);
-  const [uploadError, setUploadError] = useState(null);
+  const [file, setFile] = useState(null);
+  const [uploadType, setUploadType] = useState("midterm"); // midterm or final
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // * Fetch assigned courses
+  // Fetch teacher's courses
   useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("/teachers/courses");
+        setCourses(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch courses");
+        setLoading(false);
+      }
+    };
+
     fetchCourses();
   }, []);
 
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get("/teachers/courses");
-      setCourses(response.data);
-      setError(null);
-    } catch (err) {
-      setError("Failed to fetch courses", err);
-    } finally {
-      setLoading(false);
+  // Fetch students when a course is selected
+  useEffect(() => {
+    if (selectedCourse) {
+      fetchStudentGrades(selectedCourse.edpCode);
     }
-  };
+  }, [selectedCourse]);
 
-  // * Handle course selection and fetch students
-  const handleCourseSelect = async (course) => {
-    setSelectedCourse(course);
+  const fetchStudentGrades = async (edpCode) => {
     setLoading(true);
     try {
-      // This endpoint would return students enrolled in the course
-      const response = await axios.get(
-        `/teachers/courses/${course.edpCode}/grades`
-      );
+      const response = await axios.get(`/teachers/courses/${edpCode}/grades`);
       setStudents(response.data);
       setError(null);
     } catch (err) {
-      setError("Failed to fetch student grades", err);
+      setError("Failed to fetch student grades");
       setStudents([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // * Handle individual grade update
-  const handleGradeUpdate = async (studentId, newGrade) => {
-    if (!selectedCourse) return;
-
-    try {
-      await axios.post(`/teachers/courses/${selectedCourse.edpCode}/grades`, {
-        studentId,
-        grade: newGrade,
-      });
-
-      // Refresh student grades
-      handleCourseSelect(selectedCourse);
-    } catch (err) {
-      setError("Failed to update grade", err);
-    }
+  const handleCourseSelect = (course) => {
+    setSelectedCourse(course);
+    setSuccessMessage("");
   };
 
-  // * Handle grade file upload
-  const handleFileUpload = async (e) => {
-    e.preventDefault();
-    if (!gradeFile || !selectedCourse) return;
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setSuccessMessage("");
+  };
+
+  const handleUploadTypeChange = (e) => {
+    setUploadType(e.target.value);
+  };
+
+  const handleFileUpload = async () => {
+    if (!file || !selectedCourse) return;
 
     const formData = new FormData();
-    formData.append("grades", gradeFile);
+    formData.append("gradesFile", file);
+    formData.append("gradeType", uploadType);
 
     try {
+      setLoading(true);
       await axios.post(
         `/teachers/courses/${selectedCourse.edpCode}/grades/upload`,
         formData,
@@ -81,18 +80,58 @@ const GradeManagement = () => {
           },
         }
       );
-
-      // Refresh student grades
-      handleCourseSelect(selectedCourse);
-      setGradeFile(null);
-      setUploadError(null);
+      setSuccessMessage(`${uploadType === "midterm" ? "Midterm" : "Final"} grades uploaded successfully!`);
+      fetchStudentGrades(selectedCourse.edpCode);
     } catch (err) {
-      setUploadError("Failed to upload grades file", err);
+      setError("Failed to upload grades file");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
+  const handleGradeChange = (studentId, value, type) => {
+    const updatedStudents = students.map(student => {
+      if (student.studentId === studentId) {
+        return {
+          ...student,
+          grades: student.grades.map(grade => {
+            if (grade.edpCode === selectedCourse.edpCode) {
+              return {
+                ...grade,
+                [type]: value
+              };
+            }
+            return grade;
+          })
+        };
+      }
+      return student;
+    });
+    
+    setStudents(updatedStudents);
+  };
+
+  const handleSaveGrade = async (studentId, gradeType) => {
+    if (!selectedCourse) return;
+    
+    const student = students.find(s => s.studentId === studentId);
+    if (!student) return;
+    
+    const grade = student.grades.find(g => g.edpCode === selectedCourse.edpCode);
+    if (!grade) return;
+    
+    try {
+      await axios.put(`/teachers/courses/${selectedCourse.edpCode}/grades/${studentId}`, {
+        [gradeType]: grade[gradeType]
+      });
+      
+      setSuccessMessage(`Grade updated successfully for ${studentId}`);
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (err) {
+      setError(`Failed to update grade for ${studentId}`);
+      setTimeout(() => setError(null), 3000);
+    }
+  };
 
   return (
     <div className="grade-management">
@@ -100,19 +139,19 @@ const GradeManagement = () => {
         <h1>Grade Management</h1>
       </div>
 
-      {/* Course Selection */}
+      {error && <div className="error-message">{error}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
+
       <div className="course-selection">
-        <h2>Select Course</h2>
+        <h2>Select a Course</h2>
         <div className="courses-list">
           {courses.map((course) => (
             <button
               key={course.edpCode}
-              className={`course-btn ${
-                selectedCourse?.edpCode === course.edpCode ? "active" : ""
-              }`}
+              className={`course-select-btn ${selectedCourse?.edpCode === course.edpCode ? 'active' : ''}`}
               onClick={() => handleCourseSelect(course)}
             >
-              {course.courseCode} - {course.section}
+              {course.courseCode} - {course.edpCode}
             </button>
           ))}
         </div>
@@ -120,76 +159,106 @@ const GradeManagement = () => {
 
       {selectedCourse && (
         <>
-          {/* Grade Upload Section */}
-          <div className="grade-upload-section">
-            <h3>Upload Grades</h3>
-            <form onSubmit={handleFileUpload}>
-              <div className="upload-group">
-                <input
-                  type="file"
-                  accept=".csv,.xlsx,.xls"
-                  onChange={(e) => setGradeFile(e.target.files[0])}
-                />
-                <button
-                  type="submit"
-                  className="upload-btn"
-                  disabled={!gradeFile}
-                >
-                  Upload Grades
-                </button>
-              </div>
-              {uploadError && <div className="error">{uploadError}</div>}
-            </form>
+          <div className="upload-section">
+            <h2>Upload Grades</h2>
+            <div className="upload-controls">
+              <select 
+                value={uploadType} 
+                onChange={handleUploadTypeChange}
+                className="upload-type-select"
+              >
+                <option value="midterm">Midterm Grades</option>
+                <option value="final">Final Grades</option>
+              </select>
+              <input 
+                type="file" 
+                accept=".xlsx,.xls,.csv" 
+                onChange={handleFileChange} 
+                className="file-input"
+              />
+              <button 
+                onClick={handleFileUpload} 
+                disabled={!file}
+                className="upload-btn"
+              >
+                Upload
+              </button>
+            </div>
+            <p className="upload-note">
+              Note: The Excel file should have columns for Student ID and Grade.
+            </p>
           </div>
 
-          {/* Students Grade List */}
-          <div className="students-grade-list">
-            <h3>Student Grades</h3>
-            <div className="table-container">
-              <table>
+          <div className="grades-table-container">
+            <h2>Student Grades</h2>
+            {loading ? (
+              <div className="loading">Loading student data...</div>
+            ) : (
+              <table className="grades-table">
                 <thead>
                   <tr>
                     <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Current Grade</th>
+                    <th>Midterm Grade</th>
                     <th>Action</th>
+                    <th>Final Grade</th>
+                    <th>Action</th>
+                    <th>Remarks</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((student) => (
-                    <tr key={student.studentId}>
-                      <td>{student.studentId}</td>
-                      <td>{student.name}</td>
-                      <td>
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={student.grade || ""}
-                          onChange={(e) => {
-                            const newGrade = e.target.value;
-                            if (newGrade >= 0 && newGrade <= 100) {
-                              handleGradeUpdate(student.studentId, newGrade);
+                  {students.map((student) => {
+                    const courseGrade = student.grades.find(
+                      (g) => g.edpCode === selectedCourse.edpCode
+                    ) || { midtermGrade: null, finalGrade: null, remarks: "" };
+                    
+                    return (
+                      <tr key={student.studentId}>
+                        <td>{student.studentId}</td>
+                        <td>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={courseGrade.midtermGrade || ""}
+                            onChange={(e) => 
+                              handleGradeChange(student.studentId, e.target.value, "midtermGrade")
                             }
-                          }}
-                          className="grade-input"
-                        />
-                      </td>
-                      <td>
-                        <button
-                          onClick={() =>
-                            handleGradeUpdate(student.studentId, student.grade)
-                          }
-                          className="save-btn"
-                        >
-                          Save
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                          />
+                        </td>
+                        <td>
+                          <button 
+                            className="save-btn"
+                            onClick={() => handleSaveGrade(student.studentId, "midtermGrade")}
+                          >
+                            Save
+                          </button>
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={courseGrade.finalGrade || ""}
+                            onChange={(e) => 
+                              handleGradeChange(student.studentId, e.target.value, "finalGrade")
+                            }
+                          />
+                        </td>
+                        <td>
+                          <button 
+                            className="save-btn"
+                            onClick={() => handleSaveGrade(student.studentId, "finalGrade")}
+                          >
+                            Save
+                          </button>
+                        </td>
+                        <td>{courseGrade.remarks || "N/A"}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
-            </div>
+            )}
           </div>
         </>
       )}
