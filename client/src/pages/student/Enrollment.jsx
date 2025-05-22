@@ -132,7 +132,7 @@ const Enrollment = () => {
     }
 
     try {
-      await axios.post("/students/enrollment", {
+      await axios.post("/api/students/enrollment", {
         courses: selectedCourses,
       });
       setError(null);

@@ -7,7 +7,7 @@ const ProfileManagement = () => {
     studentId: "",
     firstName: "",
     middleName: "",
-    lastName: "",
+    lastName: "s",
     program: "",
     yearLevel: "",
     address: {
