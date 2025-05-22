@@ -158,7 +158,7 @@ const AddStudent = () => {
   // Add this function to process the parents array before submission
   const processParentsArray = (parentsData) => {
     // Filter out any parent entries with role "none" or empty role
-    return parentsData.filter(parent => 
+    return parentsData.filter(parent =>
       parent.role && parent.role !== "none" && parent.role !== ""
     );
   };
@@ -280,14 +280,14 @@ const AddStudent = () => {
   };
 
   return (
-    <div className="user-user-form-page">
+    <div className="user-form-page">
       <div className="add-user-header">
         <h2>{id ? "Edit" : "Add New"} Student</h2>
         <button
           className="back-button"
           onClick={() => navigate("/admin/mis/users")}
         >
-          Back to Users
+          ← Back
         </button>
       </div>
 
@@ -760,10 +760,10 @@ const AddStudent = () => {
             {loading
               ? id
                 ? "Updating..."
-                : "Creating..."
+                : "Adding..."
               : id
               ? "Update Student"
-              : "Create Student"}
+              : "Add Student"}
           </button>
         </div>
       </form>

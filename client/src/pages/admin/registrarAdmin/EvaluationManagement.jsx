@@ -72,7 +72,7 @@ const EvaluationManagement = () => {
 
   return (
     <div className="evaluation-management">
-      <div className="dashboard-header">
+      <div className="dashboard-header" style={{ fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif' }}>
         <h1>Evaluation Management</h1>
       </div>
 

@@ -1,13 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProfileManagement from "./ProfileManagement";
 import Grades from "./Grades";
 import Clearance from "./Clearance";
 import Enrollment from "./Enrollment";
+import Evaluation from "./Evaluation";
+import MyCourses from "./MyCourses";
 import "../../styles/StudentDashboard.css";
 
 const StudentDashboard = () => {
   // * State for active tab
   const [activeTab, setActiveTab] = useState("profile");
+  // * State for mobile sidebar visibility
+  const [isMobile, setIsMobile] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  // * Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Initial check
+    checkMobile();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // * Handle tab change
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (isMobile) {
+      setSidebarVisible(false);
+    }
+  };
 
   // * Handle logout
   const handleLogout = () => {
@@ -26,15 +55,9 @@ const StudentDashboard = () => {
       case "enrollment":
         return <Enrollment />;
       case "evaluation":
-        return (
-          <div className="placeholder">Evaluation Component (Coming Soon)</div>
-        );
+        return <Evaluation />;
       case "courses":
-        return (
-          <div className="placeholder">
-            Current Courses Component (Coming Soon)
-          </div>
-        );
+        return <MyCourses />;
       default:
         return <ProfileManagement />;
     }
@@ -42,14 +65,32 @@ const StudentDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      {/* Mobile Menu Toggle Button */}
+      {isMobile && (
+        <button
+          className="mobile-menu-toggle"
+          onClick={() => setSidebarVisible(!sidebarVisible)}
+        >
+          {sidebarVisible ? "✕" : "☰"}
+        </button>
+      )}
+
+      {/* Backdrop for mobile sidebar */}
+      {isMobile && sidebarVisible && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setSidebarVisible(false)}
+        ></div>
+      )}
+
       {/* * Sidebar Navigation */}
-      <div className="sidebar">
+      <div className={`sidebar ${isMobile ? (sidebarVisible ? 'visible' : 'hidden') : ''}`}>
         <h2>Student Dashboard</h2>
         <nav>
           {/* * Profile Management */}
           <button
             className={`nav-button ${activeTab === "profile" ? "active" : ""}`}
-            onClick={() => setActiveTab("profile")}
+            onClick={() => handleTabChange("profile")}
           >
             My Profile
           </button>
@@ -57,7 +98,7 @@ const StudentDashboard = () => {
           {/* * View Grades */}
           <button
             className={`nav-button ${activeTab === "grades" ? "active" : ""}`}
-            onClick={() => setActiveTab("grades")}
+            onClick={() => handleTabChange("grades")}
           >
             My Grades
           </button>
@@ -67,7 +108,7 @@ const StudentDashboard = () => {
             className={`nav-button ${
               activeTab === "clearance" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("clearance")}
+            onClick={() => handleTabChange("clearance")}
           >
             Clearance Status
           </button>
@@ -77,7 +118,7 @@ const StudentDashboard = () => {
             className={`nav-button ${
               activeTab === "enrollment" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("enrollment")}
+            onClick={() => handleTabChange("enrollment")}
           >
             Enrollment
           </button>
@@ -87,7 +128,7 @@ const StudentDashboard = () => {
             className={`nav-button ${
               activeTab === "evaluation" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("evaluation")}
+            onClick={() => handleTabChange("evaluation")}
           >
             Evaluation
           </button>
@@ -95,7 +136,7 @@ const StudentDashboard = () => {
           {/* * Current Enrolled Courses */}
           <button
             className={`nav-button ${activeTab === "courses" ? "active" : ""}`}
-            onClick={() => setActiveTab("courses")}
+            onClick={() => handleTabChange("courses")}
           >
             My Courses
           </button>
@@ -108,7 +149,20 @@ const StudentDashboard = () => {
       </div>
 
       {/* * Main Content Area */}
-      <div className="main-content">{renderActiveComponent()}</div>
+      <div className={`main-content ${isMobile ? 'full-width' : ''}`}>
+        {isMobile && (
+          <div className="mobile-header">
+            <h2>{activeTab === "profile" ? "My Profile" :
+                activeTab === "grades" ? "My Grades" :
+                activeTab === "clearance" ? "Clearance Status" :
+                activeTab === "enrollment" ? "Enrollment" :
+                activeTab === "evaluation" ? "Evaluation" :
+                "My Courses"}
+            </h2>
+          </div>
+        )}
+        {renderActiveComponent()}
+      </div>
     </div>
   );
 };

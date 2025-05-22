@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../api/axios";
 import "../../../styles/UserManagement.css";
 
+
 const UserManagement = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -63,7 +64,7 @@ const UserManagement = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Loading user data...</div>;
   }
 
   return (
@@ -107,35 +108,45 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.studentId || user.facultyId || user.adminId}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>
-                  {user.role === "admin"
-                    ? `${user.role} (${user.adminInfo?.position})`
-                    : user.role}
-                </td>
-                <td>{user.isActive ? "Active" : "Inactive"}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button
-                      onClick={() => handleEdit(user)}
-                      className="edit-btn"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(user)}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </div>
+            {users.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>
+                  No users found. Add a new user to get started.
                 </td>
               </tr>
-            ))}
+            ) : (
+              users.map((user) => (
+                <tr key={user.id || user.studentId || user.facultyId || user.adminId}>
+                  <td>{user.studentId || user.facultyId || user.adminId}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    {user.role === "admin"
+                      ? `${user.role} (${user.adminInfo?.position || "N/A"})`
+                      : user.role}
+                  </td>
+                  <td>{user.isActive ? "Active" : "Inactive"}</td>
+                  <td>
+                    <div className="action-buttons">
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="edit-btn"
+                        title="Edit user"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user)}
+                        className="delete-btn"
+                        title="Delete user"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

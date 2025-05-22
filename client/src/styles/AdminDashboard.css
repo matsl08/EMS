@@ -17,10 +17,51 @@
   background: #f8fafc;
 }
 
+/* * Sidebar Toggle Button */
+.sidebar-toggle {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  width: 24px;
+  height: 40px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  left: 280px;
+}
+
+.sidebar-toggle:hover {
+  background-color: #003366;
+}
+
+/* Sidebar backdrop */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* * Sidebar Styles */
 .sidebar {
   width: 280px;
-  background: #1e293b;
+  background: var(--primary);
   color: white;
   padding: 2rem 1rem;
   display: flex;
@@ -28,6 +69,16 @@
   position: fixed;
   height: 100vh;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 50;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar.visible {
+  transform: translateX(0);
 }
 
 .sidebar h2 {
@@ -79,6 +130,21 @@
   color: #fecaca;
 }
 
+/* * Mobile Header */
+.mobile-header {
+  display: none;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mobile-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
 /* * admin-Main Content Styles */
 .admin-main-content {
   flex: 1;
@@ -87,6 +153,12 @@
   min-height: 100vh;
   width: calc(100% - 280px);
   background: #f8fafc;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.admin-main-content.expanded {
+  margin-left: 0;
+  width: 100%;
 }
 
 /* * Table Styles */
@@ -326,23 +398,72 @@ button:disabled {
 
 /* * Responsive Design */
 @media (max-width: 768px) {
+  .sidebar-toggle {
+    left: 0;
+    top: 1rem;
+    transform: none;
+    border-radius: 0 4px 4px 0;
+    height: 36px;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .mobile-header {
+    display: block;
+  }
+
   .sidebar {
-    width: 240px;
+    width: 250px;
+    z-index: 100;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
 
   .admin-main-content {
-    margin-left: 240px;
-    width: calc(100% - 240px);
+    margin-left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    padding-top: 3rem; /* Space for the toggle button */
+  }
+
+  .admin-main-content.expanded {
+    margin-left: 0;
+    width: 100%;
   }
 }
 
 @media (max-width: 640px) {
   .sidebar {
-    width: 200px;
+    width: 80%;
+    max-width: 300px;
   }
 
   .admin-main-content {
-    margin-left: 200px;
-    width: calc(100% - 200px);
+    padding: 1rem;
+    padding-top: 3rem;
+  }
+
+  .courses-table {
+    min-width: 600px;
+  }
+
+  .courses-table th,
+  .courses-table td {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .edit-btn,
+  .enroll-btn,
+  .view-btn,
+  .drop-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
   }
 }

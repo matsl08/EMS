@@ -103,23 +103,23 @@ const AddTeacher = () => {
 
   return (
     <div className="user-form-page">
-      <div className="header">
+      <div className="add-user-header">
         <h2>{id ? "Edit" : "Add New"} Teacher</h2>
         <button
           className="back-button"
           onClick={() => navigate("/admin/mis/users")}
         >
-          Back to Users
+          ← Back
         </button>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit} className="user-form">
-        <div className="form-section">
-          <div className="form-section-title">Teacher Information</div>
-          <div className="form-row">
-            <div className="form-group">
+        <div className="user-form-section">
+          <div className="user-form-section-title">Teacher Information</div>
+          <div className="user-form-row">
+            <div className="user-form-group">
               <label htmlFor="facultyId">Faculty ID</label>
               <input
                 type="text"
@@ -131,7 +131,7 @@ const AddTeacher = () => {
                 placeholder="Enter faculty ID"
               />
             </div>
-            <div className="form-group">
+            <div className="user-form-group">
               <label htmlFor="name">Full Name</label>
               <input
                 type="text"
@@ -144,8 +144,8 @@ const AddTeacher = () => {
               />
             </div>
           </div>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="user-form-row">
+            <div className="user-form-group">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -157,7 +157,7 @@ const AddTeacher = () => {
                 placeholder="Enter email address"
               />
             </div>
-            <div className="form-group">
+            <div className="user-form-group">
               <label htmlFor="teacherInfo.department">Department</label>
               <input
                 type="text"
@@ -172,10 +172,10 @@ const AddTeacher = () => {
           </div>
         </div>
 
-        <div className="form-buttons">
+        <div className="user-form-buttons">
           <button
             type="button"
-            onClick={() => navigate("/admin/users")}
+            onClick={() => navigate("/admin/mis/users")}
             className="cancel-button"
           >
             Cancel

@@ -107,17 +107,17 @@ const AddAdmin = () => {
           className="back-button"
           onClick={() => navigate("/admin/mis/users")}
         >
-          Back to Users
+          ← Back
         </button>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit} className="user-form">
-        <div className="form-section">
-          <div className="form-section-title">Admin Information</div>
-          <div className="form-row">
-            <div className="form-group">
+        <div className="user-form-section">
+          <div className="user-form-section-title">Admin Information</div>
+          <div className="user-form-row">
+            <div className="user-form-group">
               <label htmlFor="adminId">Admin ID</label>
               <input
                 type="text"
@@ -129,7 +129,7 @@ const AddAdmin = () => {
                 placeholder="Enter admin ID"
               />
             </div>
-            <div className="form-group">
+            <div className="user-form-group">
               <label htmlFor="name">Full Name</label>
               <input
                 type="text"
@@ -142,8 +142,8 @@ const AddAdmin = () => {
               />
             </div>
           </div>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="user-form-row">
+            <div className="user-form-group">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -155,7 +155,7 @@ const AddAdmin = () => {
                 placeholder="Enter email address"
               />
             </div>
-            <div className="form-group">
+            <div className="user-form-group">
               <label htmlFor="adminInfo.position">Position</label>
               <select
                 id="adminInfo.position"
@@ -172,10 +172,10 @@ const AddAdmin = () => {
           </div>
         </div>
 
-        <div className="form-buttons">
+        <div className="user-form-buttons">
           <button
             type="button"
-            onClick={() => navigate("/admin/users")}
+            onClick={() => navigate("/admin/mis/users")}
             className="cancel-button"
           >
             Cancel

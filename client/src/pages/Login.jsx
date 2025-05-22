@@ -1,7 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "../styles/Login.css";
+import "../assets/ucbuilding.jpg";
+import acaflowLogo from "../assets/acaflow-logo.png";
+// Import logos (make sure to place these in your assets folder)
+import ucLogo from "../assets/uclogo.jpg"; // Replace with your actual UC logo
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,10 +17,11 @@ const Login = () => {
     role: "student",
   });
 
-  // * State for error handling and UI
+  // * State for UI control
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showRoleSelector, setShowRoleSelector] = useState(true);
 
   // * Handle redirection based on user role and admin position
   const handleRedirect = useCallback(
@@ -58,7 +63,7 @@ const Login = () => {
   );
 
   // * Check if user is already logged in
-  useState(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     const adminPosition = localStorage.getItem("adminPosition");
@@ -67,6 +72,12 @@ const Login = () => {
       handleRedirect(role, adminPosition);
     }
   }, [handleRedirect]);
+
+  // * Handle role selection
+  const handleRoleSelect = (role) => {
+    setFormData((prev) => ({ ...prev, role }));
+    setShowRoleSelector(false);
+  };
 
   // * Handle input changes
   const handleChange = (e) => {
@@ -82,6 +93,11 @@ const Login = () => {
   // * Toggle password visibility
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  // * Handle back button to return to role selection
+  const handleBack = () => {
+    setShowRoleSelector(true);
   };
 
   // * Handle form submission
@@ -151,71 +167,120 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-form-container">
-        <h1>Welcome to Acaflow</h1>
-        <form onSubmit={handleSubmit} className="login-form">
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="login-group">
-            <label htmlFor="role">Role</label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              disabled={loading}
+        {!showRoleSelector && (
+          <div className="form-indicator">
+            <button
+              type="button"
+              className="back-button"
+              onClick={handleBack}
+              aria-label="Go back"
             >
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="admin">Admin</option>
-            </select>
+              ←
+            </button>
+            <span style={{ flex: 1, textAlign: 'center' }}>
+              {formData.role.charAt(0).toUpperCase() + formData.role.slice(1)} Login
+            </span>
           </div>
+        )}
 
-          <div className="login-group">
-            <label htmlFor="id">
-              {formData.role === "admin"
-                ? "Admin ID"
-                : formData.role === "teacher"
-                ? "Faculty ID"
-                : "Student ID"}
-            </label>
-            <input
-              type="text"
-              id="id"
-              name="id"
-              value={formData.id}
-              onChange={handleChange}
-              disabled={loading}
-              required
-            />
-          </div>
-
-          <div className="login-group password-group">
-            <label htmlFor="password">Password</label>
-            <div className="password-input-container">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                disabled={loading}
-                required
-              />
+        {showRoleSelector ? (
+          <>
+            <div className="logos">
+              <img src={ucLogo} alt="UC Logo" className="uc-logo" />
+              <img src={acaflowLogo} alt="Acaflow Logo" className="acaflow-logo" />
+            </div>
+            <h1>Welcome to AcaFlow</h1>
+            <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#666' }}>
+              Please select your role to continue
+            </p>
+            <div className="role-buttons">
               <button
-                type="button"
-                onClick={togglePassword}
-                className="password-toggle"
-                disabled={loading}
+                className="role-button"
+                onClick={() => handleRoleSelect("student")}
               >
-                {showPassword ? "Hide" : "Show"}
+                Login as Student
+              </button>
+              <button
+                className="role-button"
+                onClick={() => handleRoleSelect("admin")}
+              >
+                Login as Admin
+              </button>
+              <button
+                className="role-button"
+                onClick={() => handleRoleSelect("teacher")}
+              >
+                Login as Teacher
               </button>
             </div>
-          </div>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit} className="login-form">
+            {error && <div className="error-message">{error}</div>}
 
-          <button type="submit" className="login-button" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            <div className="login-group">
+              <input
+                type="text"
+                id="id"
+                name="id"
+                value={formData.id}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder=" "
+                required
+              />
+              <label htmlFor="id">
+                {formData.role === "admin"
+                  ? "Admin ID"
+                  : formData.role === "teacher"
+                  ? "Faculty ID"
+                  : "Student ID"}
+              </label>
+            </div>
+
+            <div className="login-group password-group">
+              <div className="password-input-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  disabled={loading}
+                  placeholder=" "
+                  required
+                />
+                <label htmlFor="password">Password</label>
+                <button
+                  type="button"
+                  onClick={togglePassword}
+                  className="password-toggle"
+                  disabled={loading}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="login-button"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+            <div className="forgot-password">
+              <a href="#">Forgot Password?</a>
+            </div>
+          </form>
+        )}
+
+
+        {/* Brand footer */}
+        <div className="brand-tag">
+          © {new Date().getFullYear()} AcaFlow - University of Cebu
+        </div>
       </div>
     </div>
   );
