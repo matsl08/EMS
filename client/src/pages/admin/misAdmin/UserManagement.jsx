@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../api/axios";
 import "../../../styles/UserManagement.css";
 
-
 const UserManagement = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -50,16 +49,45 @@ const UserManagement = () => {
   };
 
   const handleEdit = (user) => {
-    switch (user.role) {
-      case "student":
-        navigate(`/admin/mis/users/edit-student/${user.studentId}`);
-        break;
-      case "teacher":
-        navigate(`/admin/mis/users/edit-teacher/${user.facultyId}`);
-        break;
-      case "admin":
-        navigate(`/admin/mis/users/edit-admin/${user.adminId}`);
-        break;
+    if (!user || !user.role) {
+      setError("Invalid user data");
+      return;
+    }
+
+    try {
+      let editPath = "";
+      let userId = "";
+
+      switch (user.role) {
+        case "student":
+          if (!user.studentId) {
+            throw new Error("Student ID not found");
+          }
+          userId = user.studentId;
+          editPath = "edit-student";
+          break;
+        case "teacher":
+          if (!user.facultyId) {
+            throw new Error("Faculty ID not found");
+          }
+          userId = user.facultyId;
+          editPath = "edit-teacher";
+          break;
+        case "admin":
+          if (!user.adminId) {
+            throw new Error("Admin ID not found");
+          }
+          userId = user.adminId;
+          editPath = "edit-admin";
+          break;
+        default:
+          throw new Error("Invalid user role");
+      }
+
+      navigate(`/admin/mis/users/${editPath}/${userId}`);
+    } catch (err) {
+      setError(err.message || "Failed to edit user");
+      console.error("Error navigating to edit page:", err);
     }
   };
 
@@ -94,7 +122,6 @@ const UserManagement = () => {
       </div>
 
       {error && <div className="error-message">{error}</div>}
-
       <div className="table-container">
         <table className="users-table">
           <thead>
@@ -108,7 +135,56 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.length === 0 ? (
+           {users.length > 0 ? (
+            users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.studentId || user.facultyId || user.adminId}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                  {user.role === "admin"
+                    ? `${user.role} (${user.adminInfo?.position})`
+                    : user.role}
+                </td>
+                <td>{user.isActive ? "Active" : "Inactive"}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="edit-btn"
+                      title = "Edit user"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user)}
+                      className="delete-btn"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="empty-message">
+                No users found. Add a new user to get started.
+              </td>
+            </tr>
+          )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default UserManagement;
+
+
+
+{/* {users.length === 0 ? (
               <tr>
                 <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>
                   No users found. Add a new user to get started.
@@ -146,12 +222,5 @@ const UserManagement = () => {
                   </td>
                 </tr>
               ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
+            )} */}
 
-export default UserManagement;

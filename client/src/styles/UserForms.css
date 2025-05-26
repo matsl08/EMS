@@ -1,13 +1,16 @@
 /* ! Root Variables */
 :root {
-  --primary: #001d3d;
-  --secondary: #00b4d8;
+  --primary: #001f3f;
+  --secondary: #003366;
   --accent: #ffb703;
-  --background: #f8f9fa;
+  --background: #ffffff;
   --text-primary: #212529;
   --text-secondary: #f8f9fa;
   --shadow: #001d3d1a;
   --font: Avenir;
+  --form-bg: #ffffff;
+  --input-border: #e2e8f0;
+  --section-title: #001f3f;
 }
 
 /* User form page container */
@@ -15,7 +18,7 @@
   min-height: 100vh;
   width: 100%;
   padding: 0;
-  background-color: #ffffff;
+  background-color: #f5f5f7;
   display: flex;
   flex-direction: column;
 }
@@ -61,18 +64,16 @@
   text-transform: uppercase;
 }
 
-.back-button:hover {
-  text-decoration: underline;
-}
-
 /* Form Container */
 .user-form {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  background: white;
+  background: var(--form-bg);
   padding: 2rem;
   flex: 1;
+  border-radius: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Two Column Layout */
@@ -100,12 +101,12 @@
 }
 
 .user-form-section-title {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
+  color: var(--section-title);
   margin-bottom: 1.5rem;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
+  padding-bottom: 0.5rem;
+  border-bottom: none;
 }
 
 /* Form Row */
@@ -124,31 +125,29 @@
 
 /* Form Groups */
 .user-form-group {
-  flex: 1;
-  min-width: 0;
   margin-bottom: 1.5rem;
 }
 
 .user-form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
   color: #4b5563;
-  font-size: 0.875rem;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .user-form-group input,
 .user-form-group select,
 .user-form-group textarea {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border);
   border-radius: 0.25rem;
   font-size: 0.875rem;
   transition: all 0.2s ease;
   background-color: white;
   color: black;
-  height: 38px;
+  height: 42px;
 }
 
 .user-form-group textarea {

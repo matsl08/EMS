@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "../../api/axios";
+// import { useNavigate } from "react-router-dom";
+// import axios from "../../api/axios";
 import "../../styles/AdminDashboard.css"; // Using the same CSS as MISAdminDashboard
 import CoursesManagement from "./CoursesManagement";
 import GradeManagement from "./GradeManagement";
@@ -9,7 +9,7 @@ import ClearanceManagement from "./ClearanceManagement";
 const TeacherDashboard = () => {
   // * State for active tab
   const [activeTab, setActiveTab] = useState("courses");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // * State for sidebar visibility
   const [sidebarVisible, setSidebarVisible] = useState(true);
   // * State for mobile detection
@@ -98,7 +98,7 @@ const TeacherDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "courses" ? "active" : ""
             }`}
-            onClick={() => handleTabChange("courses")}
+            onClick={() => setActiveTab("courses")}
           >
             My Courses
           </button>
@@ -106,7 +106,7 @@ const TeacherDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "grades" ? "active" : ""
             }`}
-            onClick={() => handleTabChange("grades")}
+            onClick={() => setActiveTab("grades")}
           >
             Grade Management
           </button>
@@ -114,7 +114,7 @@ const TeacherDashboard = () => {
             className={`admin-nav-button ${
               activeTab === "clearance" ? "active" : ""
             }`}
-            onClick={() => handleTabChange("clearance")}
+            onClick={() => setActiveTab("clearance")}
           >
             Clearance Management
           </button>

@@ -106,6 +106,8 @@ const PaymentManagement = () => {
           <thead>
             <tr>
               <th>Student ID</th>
+              <th>School Year</th>
+              <th>Semester</th>
               <th>Midterm Status</th>
               <th>Midterm Date Paid</th>
               <th>Midterm Action</th>
@@ -118,6 +120,8 @@ const PaymentManagement = () => {
             {payments.map((payment) => (
               <tr key={payment._id}>
                 <td>{payment.studentId}</td>
+                <td>{payment.schoolYear}</td>
+                <td>{payment.semester}</td>
                 <td>
                   <span
                     className={`status-${payment.payments[0]?.midterm?.status?.toLowerCase()}`}
@@ -127,7 +131,7 @@ const PaymentManagement = () => {
                 </td>
                 <td>{formatDate(payment.payments[0]?.midterm?.datePaid)}</td>
                 <td>
-                  <button
+                   <button
                     className="update-btn"
                     onClick={() => handleUpdateClick(payment, "midterm")}
                   >

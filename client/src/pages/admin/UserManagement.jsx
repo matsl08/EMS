@@ -108,33 +108,43 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.studentId || user.facultyId || user.adminId}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>
-                  {user.role === "admin"
-                    ? `${user.role} (${user.adminInfo?.position})`
-                    : user.role}
-                </td>
-                <td>{user.isActive ? "Active" : "Inactive"}</td>
-                <td>
-                  <button
-                    className="edit-button"
-                    onClick={() => handleEdit(user)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDelete(user)}
-                  >
-                    Delete
-                  </button>
+            {users.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>
+                  No users found. Add a new user to get started.
                 </td>
               </tr>
-            ))}
+            ) : (
+              users.map((user) => (
+                <tr key={user.id || user.studentId || user.facultyId || user.adminId}>
+                  <td>{user.studentId || user.facultyId || user.adminId}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    {user.role === "admin"
+                      ? `${user.role} (${user.adminInfo?.position|| "N/A"})`
+                      : user.role}
+                  </td>
+                  <td>{user.isActive ? "Active" : "Inactive"}</td>
+                  <td>
+                    <button
+                      className="edit-button"
+                      onClick={() => handleEdit(user)}
+                      title="Edit user"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDelete(user)}
+                      title="Delete user"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

@@ -59,8 +59,7 @@ const RegistrarAdminDashboard = () => {
       <button
         className="sidebar-toggle"
         onClick={toggleSidebar}
-        aria-label={sidebarVisible ? "Hide Sidebar" : "Show Sidebar"}
-      >
+        aria-label={sidebarVisible ? "Hide Sidebar" : "Show Sidebar"} >
         {sidebarVisible ? "◀" : "▶"}
       </button>
 

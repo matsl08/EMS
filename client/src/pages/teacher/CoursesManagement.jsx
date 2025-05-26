@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 
 const CoursesManagement = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const navigate = useNavigate();
+  // const [selectedCourse, setSelectedCourse] = useState(null);
+  // const navigate = useNavigate();
 
   // Fetch assigned courses
   useEffect(() => {
@@ -28,12 +28,20 @@ const CoursesManagement = () => {
   }, []);
 
   if (loading) return <div className="loading">Loading courses...</div>;
+    // Format schedule for display
+  const formatSchedule = (schedule) => {
+    if (!schedule) return "N/A";
+    if (typeof schedule === "string") return schedule;
+    return `${schedule.day || ""} | ${schedule.time || ""}`.trim() || "N/A";
+  };
+  if (courses.length === 0) return <div className="no-courses">No courses assigned</div>;
   if (error) return <div className="error">{error}</div>;
+
 
   return (
     <div className="courses-management">
       <div className="dashboard-header">
-        <h1>My Assigned Courses</h1>
+        <h1>My Courses</h1>
       </div>
       
       <div className="courses-grid">
@@ -41,9 +49,8 @@ const CoursesManagement = () => {
           <div
             key={course.edpCode}
             className="course-card"
-            onClick={() => setSelectedCourse(course)}
           >
-            <h3>{course.courseCode}</h3>
+            {/* <h3>{course.courseCode}</h3>
             <p className="course-name">{course.courseName || "Course Name"}</p>
             <div className="schedule-info">
               <p className="day">{course.schedule.day}</p>
@@ -73,12 +80,35 @@ const CoursesManagement = () => {
                 Manage Clearance
               </button>
             </div>
+          </div> */}
+          <div className="course-header">
+              <h3>{course.courseCode}</h3>
+              <p>{course.courseName}</p>
+            </div>
+            <div className="course-details">
+              <div className="course-detail-item">
+                <label>EDP Code: </label>
+                <span>{course.edpCode}</span>
+              </div>
+              <div className="course-detail-item">
+                <label>Section: </label>
+                <span>{course.section}</span>
+              </div>
+              <div className="course-detail-item">
+                <label>Schedule: </label>
+                <span>{formatSchedule(course.schedule)}</span>
+              </div>
+              <div className="course-detail-item">
+                <label>Room: </label>
+                <span>{course.schedule?.room || "N/A"}</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Course Details Modal */}
-      {selectedCourse && (
+      {/* {selectedCourse && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
@@ -140,7 +170,7 @@ const CoursesManagement = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

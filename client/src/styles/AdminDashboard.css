@@ -19,14 +19,14 @@
 
 /* * Sidebar Toggle Button */
 .sidebar-toggle {
-  position: fixed;
+  position: auto;
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
   background-color: var(--primary);
   color: white;
   border: none;
-  width: 24px;
+  width: 20px;
   height: 40px;
   font-size: 14px;
   cursor: pointer;
@@ -182,6 +182,7 @@
 .courses-table td {
   padding: 1rem;
   text-align: left;
+  color: var(--primary);
   border-bottom: 1px solid #e2e8f0;
 }
 

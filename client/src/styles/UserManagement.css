@@ -2,6 +2,7 @@
 :root {
   --primary: #001d3d;
   --secondary: #00b4d8;
+  --edit: #00ab41;
   --accent: #ffb703;
   --background: #f8f9fa;
   --text-primary: #212529;
@@ -213,12 +214,12 @@
 }
 
 .edit-btn {
-  background: var(--primary);
+  background: var(--edit);
   color: white;
 }
 
 .edit-btn:hover {
-  background: #2563eb;
+  background: #00ab41;
 }
 
 .delete-btn {

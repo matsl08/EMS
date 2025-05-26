@@ -21,7 +21,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showRoleSelector, setShowRoleSelector] = useState(true);
+  // const [showRoleSelector, setShowRoleSelector] = useState(true);
 
   // * Handle redirection based on user role and admin position
   const handleRedirect = useCallback(
@@ -63,7 +63,17 @@ const Login = () => {
   );
 
   // * Check if user is already logged in
-  useEffect(() => {
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   const role = localStorage.getItem("role");
+  //   const adminPosition = localStorage.getItem("adminPosition");
+
+  //   if (token && role) {
+  //     handleRedirect(role, adminPosition);
+  //   }
+  // }, [handleRedirect]);
+
+    useState(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     const adminPosition = localStorage.getItem("adminPosition");
@@ -74,10 +84,10 @@ const Login = () => {
   }, [handleRedirect]);
 
   // * Handle role selection
-  const handleRoleSelect = (role) => {
-    setFormData((prev) => ({ ...prev, role }));
-    setShowRoleSelector(false);
-  };
+  // const handleRoleSelect = (role) => {
+  //   setFormData((prev) => ({ ...prev, role }));
+  //   setShowRoleSelector(false);
+  // };
 
   // * Handle input changes
   const handleChange = (e) => {
@@ -96,9 +106,9 @@ const Login = () => {
   };
 
   // * Handle back button to return to role selection
-  const handleBack = () => {
-    setShowRoleSelector(true);
-  };
+  // const handleBack = () => {
+  //   setShowRoleSelector(true);
+  // };
 
   // * Handle form submission
   const handleSubmit = async (e) => {
@@ -167,7 +177,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-form-container">
-        {!showRoleSelector && (
+        {/* {!showRoleSelector && (
           <div className="form-indicator">
             <button
               type="button"
@@ -181,16 +191,16 @@ const Login = () => {
               {formData.role.charAt(0).toUpperCase() + formData.role.slice(1)} Login
             </span>
           </div>
-        )}
+        )} */}
 
-        {showRoleSelector ? (
-          <>
+        {/* {showRoleSelector ? ( */}
+          {/* <> */}
             <div className="logos">
               <img src={ucLogo} alt="UC Logo" className="uc-logo" />
               <img src={acaflowLogo} alt="Acaflow Logo" className="acaflow-logo" />
             </div>
-            <h1>Welcome to AcaFlow</h1>
-            <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#666' }}>
+            <h1>Welcome to Acaflow</h1>
+            {/* <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#666' }}>
               Please select your role to continue
             </p>
             <div className="role-buttons">
@@ -212,13 +222,13 @@ const Login = () => {
               >
                 Login as Teacher
               </button>
-            </div>
-          </>
-        ) : (
+            </div> */}
+          {/* </> */}
+        {/* ) : ( */}
           <form onSubmit={handleSubmit} className="login-form">
             {error && <div className="error-message">{error}</div>}
-
-            <div className="login-group">
+              {/*old style*/}
+            {/* <div className="login-group">
               <input
                 type="text"
                 id="id"
@@ -236,7 +246,43 @@ const Login = () => {
                   ? "Faculty ID"
                   : "Student ID"}
               </label>
-            </div>
+            </div> */}
+
+          <div className="login-group">
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              disabled={loading}
+              className="select-role"
+            >
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
+            <label htmlFor="role" className="select-label"></label>
+          </div>
+          
+           <div className="login-group">
+            <input
+              type="text"
+              id="id"
+              name="id"
+              value={formData.id}
+              onChange={handleChange}
+              disabled={loading}
+              required
+              placeholder=" "
+            />
+            <label htmlFor="id">
+              {formData.role === "admin"
+                ? "Admin ID"
+                : formData.role === "teacher"
+                ? "Faculty ID"
+                : "Student ID"}
+            </label>
+          </div>
 
             <div className="login-group password-group">
               <div className="password-input-container">
@@ -270,16 +316,13 @@ const Login = () => {
               {loading ? "Logging in..." : "Login"}
             </button>
 
-            <div className="forgot-password">
-              <a href="#">Forgot Password?</a>
-            </div>
           </form>
-        )}
+        {/* )} */}
 
 
         {/* Brand footer */}
         <div className="brand-tag">
-          © {new Date().getFullYear()} AcaFlow - University of Cebu
+          © {new Date().getFullYear()} Acaflow - University of Cebu Pardo and Talisay Campus
         </div>
       </div>
     </div>
